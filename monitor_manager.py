@@ -1,18 +1,10 @@
-import win32api, win32con # type: ignore
-import ctypes
-from ctypes import wintypes
-
+from screeninfo import get_monitors
 import cv2
-import os, dotenv
-
-from multiprocessing import Process
-
+from cv2_enumerate_cameras import enumerate_cameras
 import keyboard
 import argparse
 import sys
 
-from screeninfo import get_monitors
-from cv2_enumerate_cameras import enumerate_cameras
 
 def get_cameras():
     cameras = [{"index": i, "name": camera_info.name} for i, camera_info in enumerate(enumerate_cameras())]

@@ -3,8 +3,6 @@ from monitor_manager import get_cameras, MVideoStreamMonitor
 from screeninfo import get_monitors
 import os, json
 
-from threading import Thread
-
 def writeJSONFile(filepath, dict):
     with open(filepath, "w") as f:
         f.write(json.dumps(dict))
