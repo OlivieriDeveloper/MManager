@@ -1,0 +1,10 @@
+/.env
+/.tmp
+/.venv
+/icon.png
+/installer.ifp
+/MonitorManager.spec
+/MonitorManagerInstaller.exe
+/output
+/splash_screen.jpg
+/__pycache__
