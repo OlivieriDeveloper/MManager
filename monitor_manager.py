@@ -6,11 +6,14 @@ import argparse
 import sys
 
 
+from pygrabber.dshow_graph import FilterGraph
+
 def get_cameras():
-    cameras = [{"index": i, "name": camera_info.name} for i, camera_info in enumerate(enumerate_cameras())]
-    for camera in cameras:
-        print(f'{camera["index"]}: {camera["name"]}')
-    return cameras
+    graph = FilterGraph()
+    devices = graph.get_input_devices()
+    for idx, name in enumerate(devices):
+        print(f"{idx}: {name}")
+    return devices
 
 class MMonitor:
     def __init__(self, monitor_index, monitor_x, monitor_y, monitor_name, monitor_width, monitor_height):

@@ -8,7 +8,7 @@ def writeJSONFile(filepath, dict):
         f.write(json.dumps(dict))
         f.close()
     
-CONFIG_FILENAME = "config.json"
+CONFIG_FILENAME = "config.txt"
 if not os.path.isfile(CONFIG_FILENAME):
     config = {
         "defaultMonitor": 0,
@@ -32,7 +32,6 @@ class Ui_MainWindow(object):
 
         # Retrieve Informations
         self.cameras = get_cameras()
-        self.cameras.pop(0)
         self.monitors = get_monitors()
         with open(CONFIG_FILENAME, "r") as f:
             self.config = json.load(f)
@@ -112,9 +111,9 @@ class Ui_MainWindow(object):
         
         self.SourceLabel.setText(_translate("MainWindow", "Sorgente Video Input:"))
 
-        self.cameras_texts = [f'{cam["index"]}: {cam["name"]}' for cam in self.cameras]
-        for index, camera in enumerate(self.cameras_texts):
-            self.SourceSelector.setItemText(index, _translate("MainWindow", camera))
+        print("CAMERAS: ", self.cameras)
+        for index, camera in enumerate(self.cameras):
+            self.SourceSelector.setItemText(index, _translate("MainWindow", f"{index}: {camera}"))
         self.SourceSelector.setCurrentIndex(self.config["defaultSource"])
 
         self.SaveConfig.setText(_translate("MainWindow", "Salva questa configurazione"))
@@ -132,23 +131,33 @@ class Ui_MainWindow(object):
                                      monitor_name=self.monitors[mon_index].name, 
                                      camera_index=int(self.SourceSelector.currentIndex()))
         self.StreamBtn.setEnabled(True)
+
         self.StreamBtn.setText("Ferma")
         self.StreamBtn.clicked.disconnect(self.startStream)
         self.StreamBtn.clicked.connect(self.stopStream)
-        self.m.streamCamera()
+        
+        try:
+            self.m.streamCamera()
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(self, "Errore", f"Errore: {e}")
+
         self.StreamBtn.setText("Mostra Streaming")
         self.StreamBtn.clicked.disconnect(self.stopStream)
         self.StreamBtn.clicked.connect(self.startStream)
+        
         self.RefreshBtn.setEnabled(True)
+        
         if self.SaveConfig.isChecked():
-            self.saveConfig()
+            try:
+                self.saveConfig()
+            except:
+                QtWidgets.QMessageBox.warning(self, "Errore", "Errore: Impossibile salvare il file di configurazione")
     
     def stopStream(self):
         self.m.stopStreaming()
     
     def updateSelectors(self):
         self.cameras = get_cameras()
-        self.cameras.pop(0)
         self.monitors = get_monitors()
 
         self.MonitorSelector.clear()
@@ -158,9 +167,10 @@ class Ui_MainWindow(object):
         self.MonitorSelector.setCurrentIndex(self.config["defaultMonitor"])
         
         self.SourceSelector.clear()
+        print("CAMERAS: ", self.cameras)
         for index, camera in enumerate(self.cameras):
             self.SourceSelector.addItem("")
-            self.SourceSelector.setItemText(index, str(camera["index"])+": "+str(camera["name"]))
+            self.SourceSelector.setItemText(index, f"{index}: {camera}")
         self.SourceSelector.setCurrentIndex(self.config["defaultSource"])
     
     def saveConfig(self):
