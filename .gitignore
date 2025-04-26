@@ -5,6 +5,8 @@
 /installer.ifp
 /MonitorManager.spec
 /MonitorManagerInstaller.exe
+/MonitorManagerInstaller_v1.1.0.exe
+/MonitorManagerInstaller_v1.1.1.exe
 /output
 /splash_screen.jpg
 /__pycache__
