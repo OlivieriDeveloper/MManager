@@ -8,15 +8,18 @@ def writeJSONFile(filepath, dict):
         f.write(json.dumps(dict))
         f.close()
     
-CONFIG_FILENAME = "config.txt"
-if not os.path.isfile(CONFIG_FILENAME):
+CONFIG_FILENAME = "monitor_manager_config.txt"
+APP_DATA_PATH = os.getenv("APPDATA")
+CONFIG_FILEPATH = os.path.join(APP_DATA_PATH, CONFIG_FILENAME)
+print("CONFIG FILEPATH: ", CONFIG_FILEPATH)
+if not os.path.isfile(CONFIG_FILEPATH):
     config = {
         "defaultMonitor": 0,
         "defaultSource": 0,
     }
-    writeJSONFile(CONFIG_FILENAME, config)
+    writeJSONFile(CONFIG_FILEPATH, config)
 else:
-    with open(CONFIG_FILENAME, "r") as f:
+    with open(CONFIG_FILEPATH, "r") as f:
         try:
             config = json.load(f)  # Carica il contenuto del file JSON
         except json.JSONDecodeError:
@@ -25,7 +28,7 @@ else:
                 "defaultMonitor": 0,
                 "defaultSource": 0,
             }
-            writeJSONFile(CONFIG_FILENAME, config)
+            writeJSONFile(CONFIG_FILEPATH, config)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -33,7 +36,7 @@ class Ui_MainWindow(object):
         # Retrieve Informations
         self.cameras = get_cameras()
         self.monitors = get_monitors()
-        with open(CONFIG_FILENAME, "r") as f:
+        with open(CONFIG_FILEPATH, "r") as f:
             self.config = json.load(f)
 
         MainWindow.setObjectName("Monitor Manager")
@@ -147,11 +150,11 @@ class Ui_MainWindow(object):
         
         self.RefreshBtn.setEnabled(True)
         
-        if self.SaveConfig.isChecked():
-            try:
+        try:
+            if self.SaveConfig.isChecked():
                 self.saveConfig()
-            except:
-                QtWidgets.QMessageBox.warning(self, "Errore", "Errore: Impossibile salvare il file di configurazione")
+        except:
+            QtWidgets.QMessageBox.warning(self, "Errore", "Errore: Impossibile salvare il file di configurazione")
     
     def stopStream(self):
         self.m.stopStreaming()
@@ -176,7 +179,7 @@ class Ui_MainWindow(object):
     def saveConfig(self):
         self.config["defaultMonitor"] = self.MonitorSelector.currentIndex()
         self.config["defaultSource"] = self.SourceSelector.currentIndex()
-        writeJSONFile(CONFIG_FILENAME, self.config)
+        writeJSONFile(CONFIG_FILEPATH, self.config)
 
 if __name__ == "__main__":
     import sys
