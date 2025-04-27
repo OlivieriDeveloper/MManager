@@ -2,9 +2,10 @@
 /.tmp
 /.venv
 /icon.png
-/installer.ifp
+/installer
 /MonitorManager.spec
-/installer/*
 /output
 /splash_screen.jpg
 /__pycache__
+*.exe
+*ifp
