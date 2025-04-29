@@ -51,7 +51,8 @@ class MonitorPreviewThread(QtCore.QThread):
                 bytes_per_line = ch * w
                 qimg = QtGui.QImage(img.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
                 self.frame_captured.emit(qimg)
-                QtCore.QThread.msleep(30)  # ~30 fps
+                # QtCore.QThread.msleep(30)  # ~30 fps
+                QtCore.QThread.msleep(100)  # ~10 fps
 
     def stop(self):
         self.active = False
