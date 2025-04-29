@@ -3,10 +3,9 @@ import cv2
 from cv2_enumerate_cameras import enumerate_cameras
 import keyboard
 import argparse
-import sys
-
-
 from pygrabber.dshow_graph import FilterGraph
+import mss, numpy
+
 
 def get_cameras():
     graph = FilterGraph()
@@ -88,6 +87,7 @@ class MVideoStreamMonitor(MMonitor):
     def stopStreaming(self):
         if self.is_streaming:
             self.is_streaming = False
+
 
 def list_devices():
     print("\nMonitor disponibili:")
