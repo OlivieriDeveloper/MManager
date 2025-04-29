@@ -195,13 +195,28 @@ class Ui_MainWindow(object):
 
     def stopStream(self):
         try:
-            self.videoStream.stopStreaming()
+            # Ferma lo streaming della camera
+            if hasattr(self, 'videoStream'):
+                self.videoStream.stopStreaming()
+            
+            # Ferma il thread del monitor
             if hasattr(self, 'monitorThread'):
                 self.monitorThread.stop()
-                self.monitorThread.frame_captured.disconnect(self.showMonitorPreview)
+                try:
+                    self.monitorThread.frame_captured.disconnect(self.showMonitorPreview)
+                except Exception:
+                    pass
+            
+            # Ferma il thread della camera
             if hasattr(self, 'cameraThread'):
                 self.cameraThread.quit()
                 self.cameraThread.wait()
+            
+            # Ripristina il pulsante
+            self.streamBtn.setText("Mostra Streaming")
+            self.streamBtn.clicked.disconnect(self.stopStream)
+            self.streamBtn.clicked.connect(self.startStream)
+            
         except Exception as e:
             QtWidgets.QMessageBox.critical(self.centralwidget, "Errore", f"Errore: {e}")
 
