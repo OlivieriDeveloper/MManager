@@ -73,6 +73,7 @@ class Ui_MainWindow(object):
         self.InputForm.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.SourceSelector)
 
         for _ in self.cameras:
+<<<<<<< Updated upstream
             self.SourceSelector.addItem("")
         
         self.SaveConfig = QtWidgets.QCheckBox(self.formLayoutWidget)
@@ -90,6 +91,31 @@ class Ui_MainWindow(object):
         self.StreamBtn.setObjectName("StreamBtn")
         self.StreamBtn.clicked.connect(self.startStream)
         
+=======
+            self.sourceSelector.addItem("")
+
+        # --- Checkbox salva configurazione ---
+        self.saveConfigCheckbox = QtWidgets.QCheckBox(self.formLayoutWidget)
+        self.saveConfigCheckbox.setObjectName("saveConfigCheckbox")
+        self.inputForm.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.saveConfigCheckbox)
+
+        # --- Pulsanti ---
+        self.refreshBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.refreshBtn.setGeometry(QtCore.QRect(10, 210, 101, 23))
+        self.refreshBtn.setObjectName("refreshBtn")
+        self.refreshBtn.clicked.connect(self.updateSelectors)
+
+        self.identifyMonitorsBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.identifyMonitorsBtn.setGeometry(QtCore.QRect(10, 180, 101, 23))
+        self.identifyMonitorsBtn.setObjectName("identifyMonitorsBtn")
+        self.identifyMonitorsBtn.clicked.connect(self.identifyMonitors)
+
+        self.streamBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.streamBtn.setGeometry(QtCore.QRect(120, 210, 187, 23))
+        self.streamBtn.setObjectName("streamBtn")
+        self.streamBtn.clicked.connect(self.startStream)
+
+>>>>>>> Stashed changes
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 318, 21))
@@ -103,8 +129,25 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
+<<<<<<< Updated upstream
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Monitor Manager"))
+=======
+        _tr = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_tr("MainWindow", "Monitor Manager"))
+        self.monitorLabel.setText(_tr("MainWindow", "Monitor:"))
+        for idx, monitor in enumerate(self.monitors):
+            self.monitorSelector.setItemText(idx, _tr("MainWindow", monitor.name.strip("\.")))
+        self.monitorSelector.setCurrentIndex(self.config["defaultMonitor"])
+        self.sourceLabel.setText(_tr("MainWindow", "Sorgente Video Input:"))
+        for idx, camera in enumerate(self.cameras):
+            self.sourceSelector.setItemText(idx, _tr("MainWindow", f"{idx}: {camera}"))
+        self.sourceSelector.setCurrentIndex(self.config["defaultSource"])
+        self.saveConfigCheckbox.setText(_tr("MainWindow", "Salva questa configurazione"))
+        self.refreshBtn.setText(_tr("MainWindow", "Aggiorna"))
+        self.identifyMonitorsBtn.setText(_tr("MainWindow", "Identifica monitor"))
+        self.streamBtn.setText(_tr("MainWindow", "Mostra Streaming"))
+>>>>>>> Stashed changes
 
         self.MonitorLabel.setText(_translate("MainWindow", "Monitor:"))
 
@@ -162,6 +205,68 @@ class Ui_MainWindow(object):
     def updateSelectors(self):
         self.cameras = get_cameras()
         self.monitors = get_monitors()
+<<<<<<< Updated upstream
+=======
+        self.monitorSelector.clear()
+        for idx, monitor in enumerate(self.monitors):
+            self.monitorSelector.addItem("")
+            self.monitorSelector.setItemText(idx, monitor.name)
+        self.monitorSelector.setCurrentIndex(self.config["defaultMonitor"])
+        self.sourceSelector.clear()
+        for idx, camera in enumerate(self.cameras):
+            self.sourceSelector.addItem("")
+            self.sourceSelector.setItemText(idx, f"{idx}: {camera}")
+        self.sourceSelector.setCurrentIndex(self.config["defaultSource"])
+    
+    def identifyMonitors(self):
+        print("Identifying...")
+        monitors = get_monitors()
+        msgs = []
+        
+        for monitor in monitors:
+            # Crea una finestra personalizzata
+            dialog = QtWidgets.QDialog(self.centralwidget)
+            dialog.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.Tool)
+            
+            # Calcola la posizione al centro del monitor
+            w = 200
+            h = 200
+            x = monitor.x + 30
+            y = monitor.y + monitor.height - (h + 30)
+            dialog.setGeometry(int(x), int(y), w, h)
+            
+            # Layout principale
+            layout = QtWidgets.QVBoxLayout()
+            layout.setContentsMargins(0, 0, 0, 0)
+            
+            # Label con il numero del monitor
+            label = QtWidgets.QLabel(str(monitor.name.strip("\.")))
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            label.setStyleSheet("""
+                QLabel {
+                    color: white;
+                    font-size: 70px;
+                    font-weight: bold;
+                    padding: 0 20px;
+                }
+            """)
+            layout.addWidget(label)
+            
+            dialog.setLayout(layout)
+            dialog.setStyleSheet("""
+                QDialog {
+                    background-color:rgb(75, 75, 75);
+                }
+            """)
+            msgs.append(dialog)
+        
+        # Mostra tutte le finestre
+        for msg in msgs:
+            msg.show()
+            
+        # Timer per chiudere le finestre dopo 2 secondi
+        QtCore.QTimer.singleShot(2000, lambda: [m.close() for m in msgs])
+>>>>>>> Stashed changes
 
         self.MonitorSelector.clear()
         for index, monitor in enumerate(self.monitors):
