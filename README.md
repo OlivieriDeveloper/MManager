@@ -9,6 +9,7 @@
 - 🎛️ Selezione e gestione dinamica della sorgente video
 - 🧭 Rilevamento automatico dei monitor collegati
 - ⚙️ Interfaccia semplice e minimale
+- Identificazione dei display
 
 ## 🚀 Requisiti
 
@@ -20,7 +21,7 @@
 
 1. Clona il repository:
    ```bash
-   git clone https://github.com/tuo-username/monitor-manager.git
+   git clone https://github.com/leoolivi/monitor-manager.git
    cd monitor-manager
    ```
 
